@@ -32,23 +32,23 @@ int main(int argc, char **argv){
 
 student *get_data(){
 	student *st = NULL;
-	st = malloc(3 * sizeof(student));
+	st = (student *)malloc(3 * sizeof(student));
 	if ( st == NULL ) {
 		fprintf(stderr, "malloc error\n");
 		//exit(1);
 		return 0;
 	}
 	st[0].ID = 1;
-	strcpy("홍길동", st[0].name);
-	strcpy("축구", st[0].hobby);
+	strcpy(st[0].name, "홍길동");
+	strcpy(st[0].hobby, "축구");
 
 	st[1].ID = 2;
-	strcpy("안철수", st[1].name);
-	strcpy("컴퓨터 게임", st[1].hobby);
+	strcpy(st[1].name, "안철수");
+	strcpy(st[1].hobby, "컴퓨터 게임");
 
 	st[2].ID = 3;
-	strcpy("김영희", st[2].name);
-	strcpy("피아노연주", st[2].hobby);
+	strcpy(st[2].name, "김영희");
+	strcpy(st[2].hobby);
 
 	return st;
 
@@ -57,7 +57,7 @@ student *get_data(){
 void display_data (student *st){
 	int i = NULL;
 	for( i = 0; i < 3; i++){
-		printf("학번 : %d, 이름 : %s. 취미 : %s\n", st[i].ID, st[i].name, st[i].hobby);
+		printf("학번 : %d, 이름 : %s, 취미 : %s\n", st[i].ID, st[i].name, st[i].hobby);
 	}
 
 }
