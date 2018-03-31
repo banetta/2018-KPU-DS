@@ -7,7 +7,7 @@
 // 홍길동
 
 typedef struct Student{
-	char school[20];
+	char school[30]; // Visual Studio 에서는 [20]으로도 정상 출력되지만 리눅스에서는 그 이상으로 잡아줘야 정상 출력이 된다 locale이 달라서 그런듯?
 	char dept[20];
 	char name[20];
 } student;
@@ -34,7 +34,7 @@ int main(){
 	char *dept = NULL;
 	char *name = NULL;
 	
-	st = malloc(sizeof(struct Student));
+	st = (student *)malloc(sizeof(struct Student));
 	if ( st == NULL ){
 		fprintf(stderr, "Improper value of st\n");
 		exit (1);
