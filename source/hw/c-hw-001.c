@@ -48,7 +48,7 @@ student *get_data(){
 
 	st[2].ID = 3;
 	strcpy(st[2].name, "김영희");
-	strcpy(st[2].hobby);
+	strcpy(st[2].hobby, "피아노 연주");
 
 	return st;
 
