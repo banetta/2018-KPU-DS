@@ -18,29 +18,25 @@ char *function1(char *school);
 char *function2(char *dept);
 char *function3(char *name);
 // 소스 1 끝
-//student *memory(student *st);
+student *memory();
 
 int main(){
 	
 	student *st = NULL;
-	//st = malloc(sizeof(struct Student));
-	//if ( st == NULL ){
-	//	fprintf(stderr, "Improper value of st\n");
-	//	exit (1);
-	//}
 
 	// 제시된 소스 2
 	char *school = NULL;
 	char *dept = NULL;
 	char *name = NULL;
-	
-	st = (student *)malloc(sizeof(struct Student));
-	if ( st == NULL ){
-		fprintf(stderr, "Improper value of st\n");
-		exit (1);
-	}
 
+//	정상동작하나 별도 함수로 만들기 위해 주석처리	
+//	st = (student *)malloc(sizeof(struct Student));
+//	if ( st == NULL ){
+//		fprintf(stderr, "Improper value of st\n");
+//		exit (1);
+//	}
 
+	st = memory();
 	school = function1(st->school);
 	dept = function2(st->dept);
 	name = function3(st->name);
@@ -49,16 +45,17 @@ int main(){
 	// 소스 2 끝
 }
 
-//student *memory(student *st){
-//
-//	st = malloc(sizeof(struct Student));
-//	if ( st == NULL ){
-//		fprintf(stderr, "Improper value of st\n");
-//		exit (1);
-//	}
-//
-//	return st;
-//}
+student *memory(){
+
+	student *st = NULL;
+	st = (student *)malloc(sizeof(struct Student));
+	if ( st == NULL ){
+		fprintf(stderr, "Improper value of st\n");
+		exit (1);
+	}
+
+	return st;
+}
 
 char *function1(char *school){
 	strcpy(school, "한국산업기술대학교");
