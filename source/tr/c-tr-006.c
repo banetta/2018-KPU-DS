@@ -15,17 +15,20 @@ typedef struct student {
 //void function1 (char **school);
 //void function2 (char **dept);
 //void function3 (char **name);
-//student *get_data();
-student *get_data(char **school, char **dept, char **name);
+student *get_data();
+//student *get_data(char **school, char **dept, char **name); // core dump
+void function4 (char **school, char **dept, char **name);
 int main() {
 	
 	student *st = NULL;	
-//	st = get_data();
+	st = get_data();
 	char *school = st->school;
 	char *dept = st->dept;
 	char *name = st->name;
 
-	st = get_data(&school, &dept, &name);
+//	st = get_data(&school, &dept, &name); // coredumb
+//	st = get_data();
+	function4 (&school, &dept, &name);
 
 //	함수 하나로 합치기 위해 주석
 //	function1 (&school);
@@ -50,7 +53,8 @@ int main() {
 //
 //	return stu;
 //}
-student *get_data(char **school, char **dept, char **name){
+//student *get_data(char **school, char **dept, char **name){// coredump
+student *get_data(){
 
 	student *stu = NULL;
 
@@ -59,12 +63,18 @@ student *get_data(char **school, char **dept, char **name){
 		fprintf(stderr, "malloc error\n");
 		exit(1);
 	}
+//	coredump
+//	strcpy(*school, "한국산업기술대학교");
+//	strcpy(*dept, "컴퓨터공학과");
+//	strcpy(*name, "홍길동");
 
+	return stu;
+}
+void function4 (char **school, char **dept, char **name){
+	
 	strcpy(*school, "한국산업기술대학교");
 	strcpy(*dept, "컴퓨터공학과");
 	strcpy(*name, "홍길동");
-
-	return stu;
 }
 
 
