@@ -14,8 +14,10 @@
 
 typedef int element;
 typedef struct ListNode {
+	
 	element data;
 	struct ListNode *link;
+
 } ListNode;
 
 
@@ -34,7 +36,7 @@ void get_length(ListNode *head);
 
 int main() {
 
-	ListNode *list1 = NULL;
+	ListNode *list1;
 
 	insert_first(&list1, create_node(10, NULL));
 
@@ -53,10 +55,10 @@ int main() {
 ListNode *create_node(element data, ListNode *link){
 
 	ListNode *new_node;
-	new_node = (ListNode *)malloc(sizeof(ListNode));
-	if ( new_node = NULL ) {
-		perror("메모리 할당 에러");
-	}
+	new_node = (ListNode*)malloc(sizeof(ListNode));
+//	if ( new_node = NULL ) {
+//		perror("메모리 할당 에러");
+//	}
 	new_node->data = data;
 	new_node->link = link;
 	return(new_node);
@@ -102,7 +104,7 @@ void insert_last(ListNode **phead, ListNode *node){
 
 void get_length(ListNode *head){
 
-	int i = NULL;
+	int i = 0;
 	ListNode *p;
 	if ( head == NULL ) return;
 
