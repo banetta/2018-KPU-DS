@@ -1,4 +1,7 @@
 #include <stdio.h>
+#include <string.h>
+
+
 
 // 강의자료실에 주어진 이중연결리스트 예제처럼 dlist_insert()를 대신하여 사람의 이름을 사전적 순서로 정렬된 리스트를 유지하는 이중연결리스트
 // person *dllsorted_insert (person *list, person *bef, person *new)을 구현하고 완성하시오 (폴더내 dll 폴더 참조)
@@ -16,22 +19,35 @@ typedef struct address_t {
 
 } person;
 
-void dlist_insert (person *i);
+//void dlist_insert (person *i);
+person *dllsorted_insert(person *list, person *bef, person *new);
 void dlist_delete (person *i);
 void dlist_display (person *i);
 
 
 int main() {
 
+	int i = NULL;
+
+	switch (i != 1)
+	{
+	case 1:
+		break;
+	case 2:
+		break;
+	case 3:
+		break;
+	default:
+		break;
+	}
 
 	return 0;
 }
 
-void dlist_insert (person *i) {
-
-
+person *dllsorted_insert(person *list, person *bef, person *new) {
 
 }
+
 
 void dlist_delete (person *i) {
 
