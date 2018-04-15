@@ -3,49 +3,77 @@
 #include <stdlib.h>
 //#include "c-hw-002h.h"
 
-// ê°•ì˜ìžë£Œì‹¤ì— ì£¼ì–´ì§„ ì´ì¤‘ì—°ê²°ë¦¬ìŠ¤íŠ¸ ì˜ˆì œì²˜ëŸ¼ dlist_insert()ë¥¼ ëŒ€ì‹ í•˜ì—¬ ì‚¬ëžŒì˜ ì´ë¦„ì„ ì‚¬ì „ì  ìˆœì„œë¡œ ì •ë ¬ëœ ë¦¬ìŠ¤íŠ¸ë¥¼ ìœ ì§€í•˜ëŠ” ì´ì¤‘ì—°ê²°ë¦¬ìŠ¤íŠ¸ person *dllsorted_insert (person *list, person *bef, person *new)ì„ êµ¬í˜„í•˜ê³  ì™„ì„±í•˜ì‹œì˜¤ (í´ë”ë‚´ dll í´ë” ì°¸ì¡°)
+//	°­ÀÇÀÚ·á½Ç¿¡ ÁÖ¾îÁø ÀÌÁß¿¬°á¸®½ºÆ® ¿¹Á¦Ã³·³ dlist_insert()¸¦ ´ë½ÅÇÏ¿© »ç¶÷ÀÇ ÀÌ¸§À» »çÀüÀû ¼ø¼­·Î Á¤·ÄµÈ ¸®½ºÆ®¸¦ À¯ÁöÇÏ´Â ÀÌÁß¿¬°á¸®½ºÆ® person *dllsorted_insert (person *list, person *bef, person *new)À» ±¸ÇöÇÏ°í ¿Ï¼ºÇÏ½Ã¿À (Æú´õ³» dll Æú´õ ÂüÁ¶)
 
-// êµ¬ì¡°ì²´ ì„ ì–¸
+//	±¸Á¶Ã¼ ¼±¾ð
 typedef struct address_t {
-	
+
 	char name[64];
 	char street[64];
 	char city[64];
 	char province[16];
 	char zip[16];
 
-	// Double linked list (ì´ì¤‘ì—°ê²°ë¦¬ìŠ¤íŠ¸)ë¥¼ ìœ„í•œ í¬ì¸í„° ì„ ì–¸
+	//	Double linked list (ÀÌÁß¿¬°á¸®½ºÆ®)¸¦ À§ÇÑ Æ÷ÀÎÅÍ ¼±¾ð
 	struct address_t *prev;
 	struct address_t *next;
 
 } person;
 
-// í•„ìš” í•¨ìˆ˜ ì„ ì–¸
-person *create_node(person *);
-person *dllsorted_insert(person *, person *, person *);	// void dlist_insert()ë¥¼ ëŒ€ì²´
-person *dlist_delete (person *, person *);	// list delete í•¨ìˆ˜ 
-void dlist_display (person *);	// list display í•¨ìˆ˜
+//	ÇÊ¿ä ÇÔ¼ö ¼±¾ð
+person *create_node(person *);	//	node »ý¼º ¹× ÀÚ·á ÀÔ·Â
+person **dllsorted_insert(person *, person *);	//	void dlist_insert()¸¦ ´ëÃ¼
+person *dlist_delete(person **, person *);	//	list delete ÇÔ¼ö 
+void dlist_display(person *);	//	list display ÇÔ¼ö
+person *list_serch(person *);	//	dlist_delete ÇÔ¼ö¿¡¼­ Áö¿ï data¸¦ Ã£±â À§ÇØ ÀÌ¿ë
 
 
 int main() {
 
-	person *link = NULL;
-	char command = NULL;
-	create_node(link);
-	printf("input command : ");
-
+	person *link = NULL;	//	tail pointer »ý¼º
+			
 	while (1)
 	{
-		switch (command)
+		//	menu Ãâ·Â
+		printf("===============================\n");
+		printf("type the proper menu: \ni : insert an data \nd : delete an data \ns : show the list \nq : quit\n");
+		printf("===============================\n");
+		printf("input : ");
+
+		switch (getchar())	//	menu ÀÔ·Â
 		{
-		case 1:
-			break;
-		case 2:
-			break;
-		case 3:
-			break;
-		default:
-			break;
+			case 'i':	//	insert menu
+			
+				link = dllsorted_insert(&link, create_node(link));
+				printf("\n");
+				while (getchar() != '\n');
+				break;
+
+			case 'd':	//	delete menu
+						
+				dlist_delete(&link, list_serch(link));
+				printf("\n");
+				while (getchar() != '\n');
+				break;
+
+			case 's':
+			
+				printf("Show List....\n\n");
+				dlist_display(link);
+				printf("\n");
+				while (getchar() != '\n');
+				break;
+
+			case 'q':
+			
+				printf("Program exit\n");
+				while (getchar() != '\n');
+				return 0;
+			
+			default:
+			
+				printf("\nError!! typed wrong choice.\n\n");
+				break;
 		}
 	}
 
@@ -57,11 +85,14 @@ person *create_node(person *link) {
 	person *new_node;
 	new_node = (person*)malloc(sizeof(person));
 	if (new_node == NULL) {
-		perror("ë©”ëª¨ë¦¬ í• ë‹¹ ì—ëŸ¬");
+		printf("Error: DLL malloc in myfunc\n");
+		return 0;
 	}
 
-	char temp[64] = { NULL };
-	
+	char temp[64] = { NULL };	// strcpy_s¸¦ ÅëÇØ ÀÔ·Â ¹Þ±â À§ÇÑ temp ¼±¾ð
+
+	// temp¸¦ ÅëÇØ ÀÔ·Â ¹ÞÀº ÈÄ strcpy_s¸¦ ÀÌ¿ëÇØ node¿¡ º¹»ç
+
 	printf("insert name : ");
 	scanf_s("%s", temp, sizeof(temp));
 
@@ -71,12 +102,12 @@ person *create_node(person *link) {
 	scanf_s("%s", temp, sizeof(temp));
 
 	strcpy_s(new_node->street, 64, temp);
-	
+
 	printf("insert city : ");
 	scanf_s("%s", temp, sizeof(temp));
 
 	strcpy_s(new_node->city, 64, temp);
-	
+
 	printf("insert province : ");
 	scanf_s("%s", temp, sizeof(temp));
 
@@ -85,73 +116,136 @@ person *create_node(person *link) {
 	printf("insert zip : ");
 	scanf_s("%s", temp, sizeof(temp));
 
-	strcpy_s(new_node->name, 16, temp);
-	
-	dlist_display(new_node);
+	strcpy_s(new_node->zip, 16, temp);
 
+	// dlist_display(new_node);	// Á¤»ó ÀÔ·ÂÀÌ ‰ç´ÂÁö Ã¼Å©ÇÏ±â À§ÇÑ ÀÓ½Ã
+
+	// ÀÔ·ÂµÈ node pointer ¹ÝÈ¯
 	return(new_node);
 }
 
-/*
-person *dllsorted_insert(person *head, person *bef, person *new) {
+
+person **dllsorted_insert(person **tail, person *i) {
 	
+	person *p = (*tail)->next;
 
-	
-}
-
-// listì—ì„œ node ì‚­ì œ í•¨ìˆ˜
-// ë°˜í™˜í˜•ìœ¼ë¡œ person * ë¥¼ ì„ ì–¸í•œ ì´ìœ ëŠ” headì˜ ì •ë³´ê°€ ë°”ë€” ìˆ˜ ìžˆê¸° ë•Œë¬¸ì— ê°±ì‹ ì„ í•´ì£¼ê¸° ìœ„í•¨
-person *dlist_delete (person **head, person *i) { 
-
-	if (*head == i)	// ë§Œì•½ head(tail)ê°€ ìžê¸° ìžì‹ ì„ ê°€ë¦¬í‚¬ ë•Œ, headë¥¼ ì˜®ê²¨ì¤€ë‹¤. listë¥¼ ê°€ë¦¬í‚¬ headì— nodeì •ë³´ê°€ ìž˜ëª»ë˜ì–´ errorê°€ ë‚˜ê¸° ë•Œë¬¸
+	if (p == NULL)	// Ã³À½ node¸¦ »ðÀÔÇÒ ¶§
 	{
-		*head = i->prev;	// headì— ì•ž ë…¸ë“œì˜ ì •ë³´ë¥¼ ë„£ì–´ì¤Œ
-	}
-	// head ì²´í¬ í›„ ì•ž, ë’¤ ë…¸ë“œë¥¼ ì—°ê²°í•œ ë’¤ ì‚­ì œ
-	i->prev->next = i->next;
-
-	free(i);
-	
-	return *head;	// ifë¬¸ì˜ ì¡°ê±´ì— ë§Œì¡±í•´ head ì •ë³´ê°€ ë°”ë€” ì‹œì— ì ìš©
-}
-*/
-// list display í•¨ìˆ˜
-// í‘œì‹œí•  nodeë¥¼ ë°›ì•„ì„œ ì¶œë ¥
-void dlist_display (person *i) {	
-
-	// ì¶œë ¥ ì „ í‘œì‹œí•  nodeê°€ NULLì¸ì§€ ì²´í¬í•˜ì—¬ error ë°©ì§€
-	if (i == NULL)
-	{
-		printf("ì´ nodeëŠ” ë¹„ì–´ìžˆìŠµë‹ˆë‹¤.\n");
-		return;	// error ë©”ì‹œì§€ ì¶œë ¥ í›„ í•¨ìˆ˜ ì¢…ë£Œ
-	}
-
-	int repeat = NULL; // repeat ë³€ìˆ˜ë¥¼ ì¶”ê°€ë¡œ ë°›ì•„ì„œ ì „ì²´ ë…¸ë“œë¥¼ ì¶œë ¥í• ì§€ í˜„ìž¬ ë…¸ë“œë§Œ ì¶œë ¥í• ì§€ ì²´í¬í•˜ì—¬ ì¶œë ¥
-
-	printf("ë°˜ë³µ ì¶œë ¥í•˜ì‹œê² ìŠµë‹ˆê¹Œ?");
-	scanf_s("%d", repeat);
-
-	if (repeat = 1)	// ë°˜ë³µ ì¶œë ¥ì¼ ê²½ìš°
-	{
-		// ë°˜ë³µ ì¶œë ¥ì‹œ ì¶œë ¥ì˜ ëë¶€ë¶„ì„ ì²´í¬í•˜ê¸° ìœ„í•´ pointerë¥¼ ì¶”ê°€ë¡œ ìƒì„±í•˜ì—¬ ì²´í¬
-		person *p; 
+		// Double Linked ListÀÌ¹Ç·Î ÀÚ±â ÀÚ½ÅÀ» loop ¿¬°á
+		i->next = i;
+		i->prev = i;
+		// tail->next¿¡ node¸¦ ³ÖÀ½
 		p = i;
-		
-		do
-		{
-			//	í˜„ìž¬ p = i; ì´ê¸° ë•Œë¬¸ì— whileë¬¸ì„ ë°”ë¡œ ëŒë¦¬ë©´ ì‹¤í–‰í•˜ì§€ì•Šê³  ë°”ë¡œ ì¢…ë£Œí•˜ê¸°ì— 
-			//	do-whileë¬¸ì„ ì´ìš©, ë¨¼ì € ì„ ì¶œë ¥ í›„ check pointerë¥¼ ë‹¤ìŒ pointerë¡œ ë„˜ê¸°ê³  whileë¬¸ì„ ì‹¤í–‰
-			printf("name : %s, street : %s, city : %s, province : %s, zip : %s\n", p->name);
 
-			p = p->next;
-
-		} while (p != i);
+		return i;	// tail¿¡ ÀÚ±â ÀÚ½ÅÀ» ¹ÝÈ¯
 	}
-	else	//	ë‹¨ì¼ node ì¶œë ¥
+
+	if (strcmp(p->name, i->name) > 0)	// headÀÇ nameÀÌ »õ node name º¸´Ù Å©¸é
 	{
-		printf("name : %s, street : %s, city : %s, province : %s, zip : %s\n", i->name);
+		i->prev = p;
+		i->next = p->next;
+		p->next->prev = i;
+		p->next = i;
+		p = i;		
+
+		return p;
+		
 	}
+	else
+	{
+		
+		while (p->prev != NULL && strcmp(i->name, p->name) < 0)
+		{
+			p = p->prev;
+		}
+		
+		i->prev = p;
+		i->next = p->next;
+		p->next->prev = i;
+		p->next = i;
+
+	}
+}
+
+person *list_serch(person *tail) {
+
+	char temp[64] = { NULL };
+
+	printf("Áö¿ï dataÀÇ ÀÌ¸§À» ÀÔ·ÂÇÏ¼¼¿ä : ");
+	scanf_s("%s", temp, sizeof(temp));
+	//strcpy_s(data.name, 64, temp);
+
+	person *p = tail;
+	
+	if (p == NULL)
+	{
+		printf("list is empty\n");
+		return NULL;
+	}
+
+	while (strcmp(temp, p->name) != 0)
+	{
+		p = p->next;
+		
+	}
+		
+	return p;
 	
 }
 
+person *dlist_delete (person **tail, person * del) {
+	
+	person *p = *tail;
 
+	if (del == NULL)
+	{
+		printf("list is empty\n");
+		return;
+	}
+	
+	if (p == del)	// ¸¸¾à tailÀÌ ÀÚ±â ÀÚ½ÅÀ» °¡¸®Å³ ¶§, tail¸¦ ¿Å°ÜÁØ´Ù. list¸¦ °¡¸®Å³ tail¿¡ nodeÁ¤º¸°¡ Àß¸øµÇ¾î error°¡ ³ª±â ¶§¹®
+	{
+		p = del->prev;	// head¿¡ ¾Õ ³ëµåÀÇ Á¤º¸¸¦ ³Ö¾îÁÜ
+		del->prev->next = del->next;
+		del->next->prev = del->prev;
+		free(del);
+		dlist_display(p);
+	}
+	else
+	{
+		// head Ã¼Å© ÈÄ ¾Õ, µÚ ³ëµå¸¦ ¿¬°áÇÑ µÚ »èÁ¦
+		del->prev->next = del->next;
+		del->next->prev = del->prev;
+		free(del);
+		dlist_display(p);
+	}
+	if (p != *tail)
+	{
+		return (*tail);	// if¹®ÀÇ Á¶°Ç¿¡ ¸¸Á·ÇØ head Á¤º¸°¡ ¹Ù²ð ½Ã¿¡ Àû¿ë
+	}
+	else
+	{
+		return;
+	}
+}
+
+void dlist_display(person *tail) {
+
+	// Ãâ·Â Àü Ç¥½ÃÇÒ tailÀÌ NULLÀÎÁö Ã¼Å©ÇÏ¿© error ¹æÁö
+	if (tail == NULL)
+	{
+		printf("list is empty.\n");
+		return;	// error ¸Þ½ÃÁö Ãâ·Â ÈÄ ÇÔ¼ö Á¾·á
+	}
+	
+	// Ãâ·Â
+	person *p = tail;
+	int i = 1;
+
+	do
+	{
+		printf("%d	name : %s, street : %s, city : %s, province : %s, zip : %s\n", i++, p->name, p->street, p->city, p->province, p->zip);
+		p = p->next;
+	} while (p != tail);
+	
+}
