@@ -127,7 +127,7 @@ person *create_node(person *link) {
 
 person **dllsorted_insert(person **tail, person *i) {
 	
-	person *p = (*tail)->next;
+	person *p = (*tail);
 
 	if (p == NULL)	// 처음 node를 삽입할 때
 	{
