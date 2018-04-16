@@ -21,7 +21,7 @@ typedef struct address_t {
 } person;
 
 //	필요 함수 선언
-person *create_node(person *);	//	node 생성 및 자료 입력
+person *create_node();	//	node 생성 및 자료 입력
 person *dllsorted_insert(person *, person *);	//	void dlist_insert()를 대체
 person *dlist_delete(person **, person *);	//	list delete 함수 
 void dlist_display(person *);	//	list display 함수
@@ -44,7 +44,7 @@ int main() {
 		{
 			case 'i':	//	insert menu
 			
-				link = dllsorted_insert(link, create_node(link));
+				link = dllsorted_insert(link, create_node());
 				printf("\n");
 				while (getchar() != '\n');
 				break;
@@ -59,7 +59,7 @@ int main() {
 			case 's':
 			
 				printf("Show List....\n\n");
-				dlist_display(link);
+				dlist_display(link->next);
 				printf("\n");
 				while (getchar() != '\n');
 				break;
@@ -80,14 +80,15 @@ int main() {
 	return 0;
 }
 
-person *create_node(person *link) {
+person *create_node() {
 
-	person *new_node;
+	person *new_node = NULL;
 	new_node = (person*)malloc(sizeof(person));
 	if (new_node == NULL) {
 		printf("Error: DLL malloc in myfunc\n");
 		return 0;
 	}
+	new_node->next = new_node->prev = NULL;
 
 	char temp[64] = { NULL };	// strcpy_s를 통해 입력 받기 위한 temp 선언
 
@@ -125,51 +126,49 @@ person *create_node(person *link) {
 }
 
 
-person *dllsorted_insert(person *tail, person *i) {
+person *dllsorted_insert(person *head, person *i) {
 	
-	person *p = &tail;
-
-	if (p == NULL)	// 처음 node를 삽입할 때
+	person *phead = head;
+	
+	if (phead == NULL)	// 처음 node를 삽입할 때
 	{
 		// node가 없고 Double Linked List이므로 자기 자신을 loop 연결
-		i->next = i->prev;
-		i->prev = i->next;
+		i->next = i;
+		i->prev = i;
 		
 		// tail을 node를 가리킴
-		p = i;
+		phead = i;
 
-		return p;	// tail에 반환
+		return phead;	// tail에 반환
 	}
 
-	i->next = p->next->next;
-	i->prev = p->next;
-
+	//i->next = p->next;
+	//i->prev = p;
+	//p->next->prev = i;
+	//p->next = i;
 	
 	
 	
 
 	while (1)
 	{
-
-		if (strcmp(p->next->next->name, i->name) < 0)	// head의 name이 새 node name 보다 크면
+		if (strcmp(phead, i) > 0)
 		{
-			p = p->next;
-
+			phead = phead->prev;
 		}
-		else if (strcmp(p->next->next->name, i->name) == 0 || strcmp(p->next->next->name, i->name) > 0)	//	head의 다음 node와 새로 추가할 node name이 같을 경우
+		else if (strcmp(phead, i) < 0)
 		{
-			// node 삽입부
-			i->next = p->next->next->prev;
-			i->prev = p->next->next;
-			
-			if (strcmp(i->name, tail->name) > 0)
+			if (strcmp(phead->prev, i) < 0)
 			{
-				return p;
+				phead = phead->prev;
+				continue;
 			}
-			else
-			{
-				return i;
-			}
+			i->next = phead->next;
+			i->prev = phead;
+			phead->next->prev = i;
+			phead->next = i;
+
+			return phead;
 		}
 	}
 }
@@ -245,7 +244,7 @@ void dlist_display(person *tail) {
 
 	do
 	{
-		printf("%d	name : %s, street : %s, city : %s, province : %s, zip : %s\n", i++, p->name, p->street, p->city, p->province, p->zip);
+		printf(" %d	name : %s, street : %s, city : %s, province : %s, zip : %s\n", i++, p->name, p->street, p->city, p->province, p->zip);
 		p = p->next;
 	} while (p != tail);
 	
