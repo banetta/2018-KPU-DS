@@ -22,7 +22,7 @@ typedef struct address_t {
 
 //	필요 함수 선언
 person *create_node(person *);	//	node 생성 및 자료 입력
-person **dllsorted_insert(person *, person *);	//	void dlist_insert()를 대체
+person *dllsorted_insert(person *, person *);	//	void dlist_insert()를 대체
 person *dlist_delete(person **, person *);	//	list delete 함수 
 void dlist_display(person *);	//	list display 함수
 person *list_serch(person *);	//	dlist_delete 함수에서 지울 data를 찾기 위해 이용
@@ -44,7 +44,7 @@ int main() {
 		{
 			case 'i':	//	insert menu
 			
-				link = dllsorted_insert(&link, create_node(link));
+				link = dllsorted_insert(link, create_node(link));
 				printf("\n");
 				while (getchar() != '\n');
 				break;
@@ -125,45 +125,52 @@ person *create_node(person *link) {
 }
 
 
-person **dllsorted_insert(person **tail, person *i) {
+person *dllsorted_insert(person *tail, person *i) {
 	
-	person *p = (*tail);
+	person *p = &tail;
 
 	if (p == NULL)	// 처음 node를 삽입할 때
 	{
-		// Double Linked List이므로 자기 자신을 loop 연결
-		i->next = i;
-		i->prev = i;
-		// tail->next에 node를 넣음
+		// node가 없고 Double Linked List이므로 자기 자신을 loop 연결
+		i->next = i->prev;
+		i->prev = i->next;
+		
+		// tail을 node를 가리킴
 		p = i;
 
-		return i;	// tail에 자기 자신을 반환
+		return p;	// tail에 반환
 	}
 
-	if (strcmp(p->name, i->name) > 0)	// head의 name이 새 node name 보다 크면
-	{
-		i->prev = p;
-		i->next = p->next;
-		p->next->prev = i;
-		p->next = i;
-		p = i;		
+	i->next = p->next->next;
+	i->prev = p->next;
 
-		return p;
-		
-	}
-	else
+	
+	
+	
+
+	while (1)
 	{
-		
-		while (p->prev != NULL && strcmp(i->name, p->name) < 0)
+
+		if (strcmp(p->next->next->name, i->name) < 0)	// head의 name이 새 node name 보다 크면
 		{
-			p = p->prev;
-		}
-		
-		i->prev = p;
-		i->next = p->next;
-		p->next->prev = i;
-		p->next = i;
+			p = p->next;
 
+		}
+		else if (strcmp(p->next->next->name, i->name) == 0 || strcmp(p->next->next->name, i->name) > 0)	//	head의 다음 node와 새로 추가할 node name이 같을 경우
+		{
+			// node 삽입부
+			i->next = p->next->next->prev;
+			i->prev = p->next->next;
+			
+			if (strcmp(i->name, tail->name) > 0)
+			{
+				return p;
+			}
+			else
+			{
+				return i;
+			}
+		}
 	}
 }
 
@@ -193,14 +200,14 @@ person *list_serch(person *tail) {
 	
 }
 
-person *dlist_delete (person **tail, person * del) {
+person *dlist_delete (person *tail, person * del) {
 	
-	person *p = *tail;
+	person *p = tail;
 
 	if (del == NULL)
 	{
 		printf("list is empty\n");
-		return;
+		return tail;
 	}
 	
 	if (p == del)	// 만약 tail이 자기 자신을 가리킬 때, tail를 옮겨준다. list를 가리킬 tail에 node정보가 잘못되어 error가 나기 때문
@@ -219,14 +226,8 @@ person *dlist_delete (person **tail, person * del) {
 		free(del);
 		dlist_display(p);
 	}
-	if (p != *tail)
-	{
-		return (*tail);	// if문의 조건에 만족해 head 정보가 바뀔 시에 적용
-	}
-	else
-	{
-		return;
-	}
+		return tail;	// if문의 조건에 만족해 head 정보가 바뀔 시에 적용
+
 }
 
 void dlist_display(person *tail) {
