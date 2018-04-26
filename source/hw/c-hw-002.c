@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-//#include "c-hw-002h.h"
 
 //	강의자료실에 주어진 이중연결리스트 예제처럼 dlist_insert()를 대신하여 사람의 이름을 사전적 순서로 정렬된 리스트를 유지하는 이중연결리스트 person *dllsorted_insert (person *list, person *bef, person *new)을 구현하고 완성하시오 (폴더내 dll 폴더 참조)
 
@@ -236,7 +235,7 @@ person *list_serch(person *tail) {	//	dlist_delete를 위해 node를 찾아주는 함수
 	
 } 
 
-person *dlist_delete (person *tail, person * del) {	//	list에서 찾은 node를 지워주는 함수
+person *dlist_delete (person *tail, person *del) {	//	list에서 찾은 node를 지워주는 함수
 	
 	person *pdel = tail;	//	temp pointer 선언
 	if (tail == NULL)	//	아직 list가 만들어지지 않았을때 실행하지않고 종료
