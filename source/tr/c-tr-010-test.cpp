@@ -12,7 +12,7 @@ typedef struct {
 	int freq; // 빈도수 저장을 위한 배열 
 }AlphaType;
 
-typedef struct TreeNode {
+typedef struct TreeNode {	//	이진트리 구조체
 	AlphaType weight;
 	TreeNode *left_child;
 	TreeNode *right_child;
