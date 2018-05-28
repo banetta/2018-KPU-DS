@@ -1,5 +1,4 @@
 #ifndef __HUF_
-
 #define __HUF_
 
 #include <stdio.h> 
